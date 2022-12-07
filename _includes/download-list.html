@@ -1,0 +1,24 @@
+{% if include.files != empty %}
+    <table>
+        {% assign filename_token = "{}" %}
+        {% for file in include.files %}
+            <tr>
+                {% assign filename = include.path | append: file %}
+                {% assign basename = file | split: "/" | last %}
+                <td><a href="{{ include.artifact-url | replace: filename_token, filename }}"
+                       onclick="trackDownload(
+                           'click',
+                           '{{ basename }}'
+                       )"
+                       oncontextmenu="trackDownload(
+                           'menu',
+                           '{{ basename }}'
+                       )">{{ basename }}</a></td>
+                {% for checksum in include.checksum-suffixes %}
+                    {% assign checksum_filename = include.path | append:file | append: checksum[1] %}
+                    <td>[ <a href="{{ include.checksum-url | replace: filename_token, checksum_filename }}">{{ checksum[0] }}</a> ]</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </table>
+{% endif %}
